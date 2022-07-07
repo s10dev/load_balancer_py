@@ -17,6 +17,8 @@ config.read('cfg.ini')
 proxy_hosts_pool = json.loads(config['hosts_pool']['hosts'])
 losted_hosts_pool = []
 
+# Если бэкенд выбыл, полим его статус
+# Если ответ 200 - добавляем в proxy_hosts_pool
 def health_check_dead_hosts():
     for host in losted_hosts_pool:
         try:
@@ -67,17 +69,14 @@ def catch_all(path):
             proxy_hosts_pool.remove(host)
             proxy_hosts_pool.append(host)
             break
-        # если хост, то пробуем другой хост
-        # TODO: Стоит выбрасывать нерабочий хост из пула
-        # и пулить его состояние в бэкграунде
+        # если хост мертвый, то вычеркиваем его из пула
         except requests.exceptions.ReadTimeout:
             print('Умер хост: ', host)
             proxy_hosts_pool.remove(host)
             losted_hosts_pool.append(host)
-    # Если все хосты из пула мертвые, возвращаем эту инфу
-    # TODO: по хорошему лучше возвращать 500-ку
+    # Если все хосты из пула мертвые, возвращаем 500-ку
     if 'proxy_response' not in locals():
-        return 'Нет доступных хостов'
+        raise Exception('Нет доступных бэкендов')
     return proxy_response
 
 if __name__ == '__main__':

@@ -34,7 +34,6 @@ scheduler.start()
 
 # декоратор для хендлера
 # до процессинга функции инкремент ключа в мемкеше
-# после декремент
 def log_request_proccessing(func):
     def wrapper(*args, **kwargs):
         memc_client.incr(memc_key, 1)
