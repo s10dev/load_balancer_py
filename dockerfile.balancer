@@ -1,5 +1,7 @@
 FROM python:3.9-alpine
 
+RUN cp /usr/share/zoneinfo/Europe/Moscow /etc/localtime
+
 ENV PYTHONUNBUFFERED 1
 
 WORKDIR /var/www/app
