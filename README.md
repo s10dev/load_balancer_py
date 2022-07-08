@@ -5,7 +5,7 @@ docker-compose up
 ```
 SECOND TERMINAL:
 ```
-python spam.py
+python spamer.py
 ```
 
 THIRD TERMINAL:
