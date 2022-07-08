@@ -1,26 +1,21 @@
 from flask import Flask
 from apscheduler.schedulers.background import BackgroundScheduler
 from datetime import datetime
-from pymemcache.client import base
 import atexit
 import socket
-import time
 
 
 HOST_NAME = socket.gethostname()
 
 app = Flask(__name__)
-# Инициализируем клиент мемкеша
-memc_client = base.Client(('memcached', 11211))
-memc_key = f'requests_in_proccess[{HOST_NAME}:5001]'
-# В ключ пишем значение
-memc_client.set(memc_key, 0)
 
+requests_in_proccess = 0
 # Функция логгирования текущих запросов в обработки
 def log_current_requests_proccessing():
+    global requests_in_proccess
     date = datetime.now().strftime('[%d/%b/%Y %H:%M:%S] ')
-    msg = date + 'Rps ~ ' + f'{int((memc_client.get(memc_key).decode("utf-8"))) // 10}'
-    memc_client.set(memc_key, 0)
+    msg = date + 'Rps ~ ' + str(requests_in_proccess // 10)
+    requests_in_proccess = 0
     print(msg)
 
 # мини крон на функцию логгирования
@@ -36,7 +31,8 @@ scheduler.start()
 # до процессинга функции инкремент ключа в мемкеше
 def log_request_proccessing(func):
     def wrapper(*args, **kwargs):
-        memc_client.incr(memc_key, 1)
+        global requests_in_proccess
+        requests_in_proccess += 1
         response = func(*args, **kwargs)
         return response
     return wrapper

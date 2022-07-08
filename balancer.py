@@ -1,5 +1,4 @@
 from flask import Flask, request, Response
-from pymemcache.client import base
 from apscheduler.schedulers.background import BackgroundScheduler
 import requests
 import configparser
@@ -9,7 +8,6 @@ import json
 app = Flask(__name__)
 
 APP_PORT = 5001
-memc_client = base.Client(('memcached', 11211))
 
 # Получаем список хостов из конфига
 config = configparser.ConfigParser()
