@@ -18,7 +18,6 @@ services:
 
   app_1:
     build:
-      network: app_1
       context: .
       dockerfile: dockerfile.app
     depends_on:
@@ -26,7 +25,6 @@ services:
 
   app_2:
     build:
-      network: app_2
       context: .
       dockerfile: dockerfile.app
     depends_on:
@@ -34,7 +32,6 @@ services:
   
   app_3:
     build:
-      network: app_3
       context: .
       dockerfile: dockerfile.app
     depends_on:
@@ -42,7 +39,6 @@ services:
 
   app_4:
     build:
-      network: app_4
       context: .
       dockerfile: dockerfile.app
     depends_on:
@@ -50,7 +46,6 @@ services:
 
   app_5:
     build:
-      network: app_5
       context: .
       dockerfile: dockerfile.app
     depends_on:
